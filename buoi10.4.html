@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đếm số lần xuất hiện của từ trong văn bản</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            overflow-y: auto;
+            max-height: 400px;
+            /* Giới hạn chiều cao */
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .results-container {
+            overflow-y: auto;
+            max-height: 400px;
+            margin-top: 20px;
+        }
+
+        .restart-btn {
+            background-color: #f44336;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .restart-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Đếm số lần xuất hiện của từ trong văn bản</h1>
+        <textarea id="inputText" rows="6" placeholder="Nhập đoạn văn bản vào đây..."
+            style="font-family: Arial, Helvetica, sans-serif;"></textarea><br>
+        <button onclick="countWords()">Đếm từ</button>
+
+        <div id="resultsContainer" class="results-container" style="display:none;">
+            <h3>Kết quả:</h3>
+            <table id="wordCountTable">
+                <thead>
+                    <tr>
+                        <th>Từ</th>
+                        <th>Số lần xuất hiện</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button class="restart-btn" onclick="restart()">Quay lại</button>
+        </div>
+    </div>
+
+    <script>
+        function countWords() {
+            // Lấy giá trị nhập vào từ người dùng
+            const text = document.getElementById('inputText').value;
+
+            // Chuyển văn bản về chữ thường và tách thành mảng các từ
+            const words = text.toLowerCase().match(/[a-zảáàãạăắằẳẵặâấầẩẫậêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ]+/g);
+
+            // Tạo một đối tượng để lưu số lần xuất hiện của từng từ
+            const wordCount = {};
+
+            // Đếm số lần xuất hiện của từng từ
+            if (words) {
+                words.forEach(word => {
+                    wordCount[word] = (wordCount[word] || 0) + 1;
+                });
+            }
+
+            // Sắp xếp kết quả theo số lần xuất hiện giảm dần
+            const sortedWords = Object.entries(wordCount).sort((a, b) => b[1] - a[1]);
+
+            // Hiển thị kết quả trong bảng
+            const tableBody = document.getElementById('wordCountTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Làm sạch bảng trước khi hiển thị kết quả mới
+            sortedWords.forEach(([word, count]) => {
+                const row = document.createElement('tr');
+                const wordCell = document.createElement('td');
+                wordCell.textContent = word;
+                const countCell = document.createElement('td');
+                countCell.textContent = count;
+                row.appendChild(wordCell);
+                row.appendChild(countCell);
+                tableBody.appendChild(row);
+            });
+
+            // Hiển thị phần kết quả và ẩn phần nhập liệu
+            document.getElementById('resultsContainer').style.display = 'block';
+            document.querySelector('.container').style.height = 'auto'; // Điều chỉnh chiều cao
+        }
+
+        function restart() {
+            // Ẩn bảng kết quả và hiển thị lại phần nhập liệu
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('inputText').value = '';
+            document.querySelector('.container').style.height = 'auto';
+        }
+    </script>
+
+</body>
+
+</html>
